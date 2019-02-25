@@ -12,7 +12,7 @@ public class CallableFutureTest {
     public static void main(String[] args) throws InterruptedException, ExecutionException{
         
         //callable code
-        Callable<Integer> task=()->{
+        Callable <Integer> task=()->{
         try{
             TimeUnit.SECONDS.sleep(1);
             return 123;
