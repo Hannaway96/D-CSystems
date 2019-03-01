@@ -3,8 +3,8 @@ package assignment1;
 
 public class Assignment1 {
     
-    static final int num_Of_A_Trains = 50;
-    static final int num_Of_B_Trains = 50;
+    static final int num_Of_A_Trains = 5;
+    static final int num_Of_B_Trains = 5;
     static TrainTrack trainTrack;
     
     public static void main(String[] args) {
