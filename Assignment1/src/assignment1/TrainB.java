@@ -7,7 +7,7 @@ package assignment1;
 
 public class TrainB extends Thread{
     
-    //This is uused to represent a train on Track A    
+    //This is uused to represent a train on Track B    
     String trainName;
     TrainTrack track;
     
@@ -16,7 +16,7 @@ public class TrainB extends Thread{
         this.track = track;
     }
       
-    public void run(){ //Start TrainB
-       track.moveTrainB(trainName);
+    public void run(){ //Start Train B
+      track.moveTrainB(trainName);
     }
 }
