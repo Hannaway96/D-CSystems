@@ -17,6 +17,7 @@ public class TrainB extends Thread{
     }
       
     public void run(){ //Start Train B
+        
       track.moveTrainB(trainName);
     }
 }

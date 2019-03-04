@@ -10,10 +10,10 @@ public class TrainA extends Thread{
     //This is uused to represent a train on Track A    
     String trainName;
     TrainTrack track;
-    
+ 
     public TrainA(String trainName, TrainTrack track){
         this.trainName = trainName;
-        this.track = track;
+        this.track = track;     
     }
        
     public void run(){ //Start Train A

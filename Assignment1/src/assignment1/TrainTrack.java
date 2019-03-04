@@ -13,12 +13,13 @@ public class TrainTrack {
     
     //Array to hold Binary semaphores for each track section
     private final MageeSemaphore slotSem[] = new MageeSemaphore[22];
-    //private final MageeSemaphore crossRoad1;
-    //private final MageeSemaphore crossRoad2;
-    
+    MageeSemaphore maxTrainASem;                //Maximum Atrains allowes on track at any one time
+    MageeSemaphore maxTrainBSem;                //Maximum Btrains allowes on track at any one time
+    MageeSemaphore crossRoad4Mutex;
+    MageeSemaphore crossRoad7Mutex;
+      
     //Reference to Train activities
     Activity trainActivity;
-    
     
     public TrainTrack(){
         trainActivity = new Activity(slots);        
@@ -27,14 +28,17 @@ public class TrainTrack {
             slotSem[i] = new MageeSemaphore(1);
         }  
         
-        //crossRoad1 = new MageeSemaphore(0);
-        //crossRoad2 = new MageeSemaphore(0);
+        maxTrainASem = new MageeSemaphore(3);
+        maxTrainBSem = new MageeSemaphore(3);         
+        crossRoad4Mutex = new MageeSemaphore(1);
+        crossRoad7Mutex = new MageeSemaphore(1);
     }
     
     public void moveTrainA(String trainName){
-        CDS.idle((int)(Math.random()) * 10);  
         
+        CDS.idle((int)(Math.random()) * 10);        
         //Make a record of train's activity
+        maxTrainASem.P();       //Acquire Access to track
         trainActivity.addMessage("Train " + trainName + " is setting off");
         slotSem[0].P();             //Wait for the first slot to be free
         slots[0] = "[" + trainName + "]"; //Move train to next slot
@@ -60,9 +64,8 @@ public class TrainTrack {
         slots[2] = "[..]";      //Erase last slot
         trainActivity.addMovedTo(3);    //Record change
         slotSem[2].V();     //Give up the previous slot
-        
-        trainActivity.addMessage("Train " + trainName + " is approaching crossroad");
-        //crossRoad1.P();         
+               
+        trainActivity.addMessage("Train " + trainName + " is approaching crossroad");    
         slotSem[4].P();         // wait for slot 4 and 5 to be free as trains cannot stop on crossroads
         slots[4] = slots[3];    //move to next slot
         slots[3] = "[..]";      //Erase last slot
@@ -75,8 +78,7 @@ public class TrainTrack {
         slots[4] = "[..]";      //Erase last slot
         trainActivity.addMovedTo(5);    //Record change
         slotSem[4].V();         //Give up the previous slot
-        //crossRoad1.V();
-                             
+                                    
         trainActivity.addMessage("Train " + trainName + " is moving to slot 6");
         slotSem[6].P();         // wait for slot to be free
         slots[6] = slots[5];    //move to next slot
@@ -85,7 +87,6 @@ public class TrainTrack {
         slotSem[5].V();     //Give up the previous slot
         
         trainActivity.addMessage("Train " + trainName + " is approaching crossroad");
-        //crossRoad2.P();
         slotSem[7].P();        
         slots[7] = slots[6];    //move to next slot
         slots[6] = "[..]";      //Erase last slot
@@ -98,8 +99,7 @@ public class TrainTrack {
         slots[7] = "[..]";      //Erase last slot
         trainActivity.addMovedTo(8);    //Record change
         slotSem[7].V();     //Give up the previous slot
-        //crossRoad2.V();
-               
+                    
         trainActivity.addMessage("Train " + trainName + " is moving to slot 9");
         slotSem[9].P();         // wait for slot to be free
         slots[9] = slots[8];    //move to next slot
@@ -123,13 +123,15 @@ public class TrainTrack {
         
         trainActivity.addMessage("Train " + trainName + " reached it's destination");
         slots[11] = "[..]";
-        slotSem[11].V();           
+        slotSem[11].V();
+        maxTrainASem.V();       //Releasee Access to track       
     }
     
     public void moveTrainB(String trainName){
         
         CDS.idle((int)(Math.random()) * 100);            
         //Make a record of train's activity
+        maxTrainBSem.P();           //Acquire Access to track
         trainActivity.addMessage("Train " + trainName + " is setting off");
         slotSem[12].P();             //Wait for the first slot to be free
         slots[12] = "[" + trainName + "]"; //Move train to next slot
@@ -155,8 +157,7 @@ public class TrainTrack {
         slots[14] = "[..]";      //Erase last slot
         trainActivity.addMovedTo(15);    //Record change
         slotSem[14].V();     //Give up the previous slot
-        
-        //crossRoad2.P();
+                
         trainActivity.addMessage("Train " + trainName + " is approaching crossroad");
         slotSem[7].P();
         slots[7] = slots[15];    //move to next slot
@@ -170,8 +171,7 @@ public class TrainTrack {
         slots[7] = "[..]";      //Erase last slot
         trainActivity.addMovedTo(16);    //Record change
         slotSem[7].V();         //Give up the previous slot
-        //crossRoad2.V();
-                                             
+                                                     
         trainActivity.addMessage("Train " + trainName + " is moving to slot 17");
         slotSem[17].P();         // wait for slot to be free
         slots[17] = slots[16];    //move to next slot
@@ -180,7 +180,6 @@ public class TrainTrack {
         slotSem[16].V();         //Give up the previous slot
             
         trainActivity.addMessage("Train " + trainName + " is approaching crossroad");
-        //crossRoad1.P();
         slotSem[4].P(); // wait for slot 7 and 8 to be free as Trains cannot stop on the cross road                
         slots[4] = slots[17];    //move to next slot
         slots[17] = "[..]";      //Erase last slot
@@ -193,7 +192,6 @@ public class TrainTrack {
         slots[4] = "[..]";      //Erase last slot
         trainActivity.addMovedTo(18);    //Record change
         slotSem[4].V();         //Give up the previous slot
-        //crossRoad1.P();
                     
         trainActivity.addMessage("Train " + trainName + " is moving to slot 19");
         slotSem[19].P();         // wait for slot to be free
@@ -219,5 +217,6 @@ public class TrainTrack {
         trainActivity.addMessage("Train " + trainName + " reached it's destination");
         slots[21] = "[..]";
         slotSem[21].V();  
+        maxTrainBSem.V();           //Release Access to track
     }     
 }

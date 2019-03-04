@@ -22,7 +22,7 @@ public class Activity {
 
     public void addMovedTo(int section) {
         // add an activity message to the activity history
-        String tempString1 = "Train " + trainTrack[section] + " moving/moved to [" + section + "]";
+        String tempString1 = "Train " + trainTrack[section] + " moved to [" + section + "]";
         theActivities.add(tempString1);
         // add the current state of the track to the activity history
         theActivities.add(trackString());
