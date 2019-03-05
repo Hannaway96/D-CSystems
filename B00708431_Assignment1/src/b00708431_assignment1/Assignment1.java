@@ -7,8 +7,10 @@ package b00708431_assignment1;
 
 public class Assignment1 {
     
+    //maximum number of each train allowed on their respective track
     static final int num_Of_A_Trains = 5;
     static final int num_Of_B_Trains = 5;      
+    
     static TrainTrack trainTrack;    
 
     public static void main(String[] args) {

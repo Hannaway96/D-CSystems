@@ -137,20 +137,18 @@ public class TrainTrack {
         CDS.idle((int) (Math.random() * 10));
         int currentPos = 9;
         do {
-            // wait until the position ahead is empty and then move into it
-            slotSem[currentPos + 1].P(); // wait for the slot ahead to be free
-            slots[currentPos + 1] = slots[currentPos]; // move train forward one position
-            slots[currentPos] = "[..]"; // clear the slot the train vacated
-            trainActivity.addMovedTo(currentPos + 1); // record the train activity
-            slotSem[currentPos].V(); // signal slot you are leaving 
-            currentPos++;
-        } while (currentPos < 11);
+            slotSem[currentPos + 1].P();                //wait for the slot ahead to be free
+            slots[currentPos + 1] = slots[currentPos];  //trsin moves to next slot
+            slots[currentPos] = "[..]";                 //previous slot is now empty
+            trainActivity.addMovedTo(currentPos + 1);   //record the activity
+            slotSem[currentPos].V();                    //release previous slot semaphore 
+            currentPos++;                               //increment current position
+        } while (currentPos < 11);                      //repeat up to slot 11
               
+        slots[11] = "[..]";                             //last slot is now empty 
+        slotSem[11].V();                                //release previous slot semaphore
         trainActivity.addMessage("Train " + trainName + " reached it's destination");
-        slots[11] = "[..]"; // move train type A off slot zero  
-        slotSem[11].V();// signal slot 0 to be free
-        CDS.idle((int) (Math.random() * 10));
-        maxTrainA.V(); // signal space for another A train
+        maxTrainA.V();                                  //allow another train to enter the track
     }
     
     public void MoveTrainB_ToTrack(String trainName){
@@ -182,80 +180,74 @@ public class TrainTrack {
         
         trainActivity.addMessage("Train " + trainName + " is approaching crossroads");
         CDS.idle((int) (Math.random() * 10));
-        // wait for the necessary conditions to get access to shared track
-        bMutexSem.P(); // obtain mutually exclusive access to global variable bUsingsharedJunction
-        if (bUsingCrossRoad.incrementAndGet() == 1)// if first B train joining shared track
-        {
-            sharedCrossRoadLock.P();  // grab lock to shared track
+        
+        bMutexSem.P(); 
+        if (bUsingCrossRoad.incrementAndGet() == 1){
+            sharedCrossRoadLock.P();  
         }
-        bMutexSem.V(); // release mutually exclusive access to global variable bUsingsharedJunction  
+        bMutexSem.V(); 
+        
         CDS.idle((int) (Math.random() * 10));
-        // move on to shared track
         slotSem[7].P();
         slots[7] = slots[15];
         slots[15] = "[..]";
-        slotSem[15].V(); //move from slot[10] to slot[9]
-        trainActivity.addMovedTo(7);  //record the train activity
+        slotSem[15].V(); 
+        trainActivity.addMovedTo(7);  
         CDS.idle((int) (Math.random() * 10));
-        // move along shared track
+     
         slotSem[16].P();
         slots[16] = slots[7];
         slots[7] = "[..]";
-        slotSem[7].V(); //move from slot[9] to slot[8]
-        trainActivity.addMovedTo(16); // record the train activity
+        slotSem[7].V(); 
+        trainActivity.addMovedTo(16); 
         
         slotSem[17].P();
         slots[17] = slots[16];
         slots[16] = "[..]";
-        slotSem[16].V(); //move from slot[8] to slot[7]
-        trainActivity.addMovedTo(17); // record the train activity
+        slotSem[16].V(); 
+        trainActivity.addMovedTo(17); 
         CDS.idle((int) (Math.random() * 10));
-        // move off shared track
+        
         slotSem[4].P();
         slots[4] = slots[17];
         slots[17] = "[..]";
-        slotSem[17].V(); //move from slot[7] to slot[16]
-        trainActivity.addMovedTo(4); // record the train activity
-        // move off shared track
+        slotSem[17].V(); 
+        trainActivity.addMovedTo(4); 
+        
         slotSem[18].P();
         slots[18] = slots[4];
         slots[4] = "[..]";
-        slotSem[4].V(); //move from slot[7] to slot[16]
-        trainActivity.addMovedTo(18); // record the train activity
-        // move off shared track
+        slotSem[4].V(); 
+        trainActivity.addMovedTo(18); 
+        
         slotSem[19].P();
         slots[19] = slots[18];
         slots[18] = "[..]";
-        slotSem[18].V(); //move from slot[7] to slot[16]
-        trainActivity.addMovedTo(19); // record the train activity
-        // signal conditions when leaving shared track
-        bMutexSem.P(); // obtain mutually exclusive access to global variable aUsingsharedJunction
-        if (bUsingCrossRoad.decrementAndGet() == 0) // if last B train leaving shared track
-        {
-            sharedCrossRoadLock.V(); // release lock to shared track
+        slotSem[18].V(); 
+        trainActivity.addMovedTo(19); 
+        
+        bMutexSem.P(); 
+        if (bUsingCrossRoad.decrementAndGet() == 0){
+            sharedCrossRoadLock.V(); 
         }
-        bMutexSem.V(); // release mutually exclusive access to global variable aUsingsharedJunction
-        CDS.idle((int) (Math.random() * 10));
+        bMutexSem.V(); 
     }
     
     public void MoveTrainB_OffTrack(String trainName) {
-        CDS.idle((int) (Math.random() * 100));
-        
+        CDS.idle((int) (Math.random() * 100));       
         int currentPos = 19;
         do {
-            // wait until the position ahead is empty and then move into it
-            slotSem[currentPos + 1].P(); // wait for the slot ahead to be free
-            slots[currentPos + 1] = slots[currentPos]; // move train forward one position
-            slots[currentPos] = "[..]"; // clear the slot the train vacated
-            trainActivity.addMovedTo(currentPos + 1); // record the train activity
-            slotSem[currentPos].V(); // signal slot you are leaving 
+            slotSem[currentPos + 1].P(); 
+            slots[currentPos + 1] = slots[currentPos]; 
+            slots[currentPos] = "[..]"; 
+            trainActivity.addMovedTo(currentPos + 1); 
+            slotSem[currentPos].V(); 
             currentPos++;
         } while (currentPos < 21);
-        // record the train activity
+       
         trainActivity.addMessage("Train " + trainName + " reached it's destination");
-        slots[21] = "[..]"; // move train type A off slot zero  
-        slotSem[21].V();// signal slot 0 to be free
-        CDS.idle((int) (Math.random() * 10));
-        maxTrainB.V(); // signal space for another B train
+        slots[21] = "[..]";  
+        slotSem[21].V();
+        maxTrainB.V(); 
     }    
 }
