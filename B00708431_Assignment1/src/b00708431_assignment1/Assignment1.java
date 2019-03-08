@@ -8,9 +8,10 @@ package b00708431_assignment1;
 public class Assignment1 {
     
     //maximum number of each train allowed on their respective track
-    static final int num_Of_A_Trains = 5;
-    static final int num_Of_B_Trains = 5;      
+    static final int num_Of_A_Trains = 20;
+    static final int num_Of_B_Trains = 20;
     
+    //Train Track class 
     static TrainTrack trainTrack;    
 
     public static void main(String[] args) {
@@ -38,7 +39,8 @@ public class Assignment1 {
             bTrains[i].start();       
         }     
         System.out.println("Trains Started");
-             
+          
+        //Adding all of the train activities to the output string
         for(int i=0; i<num_Of_A_Trains; i++){
             try{
                 aTrains[i].join();
@@ -50,8 +52,9 @@ public class Assignment1 {
                 bTrains[i].join();
             }catch(InterruptedException ex){}
         }        
+        
+        //Print all of the train's activities
         trainTrack.trainActivity.printActivities();        
         System.out.println("All Trains have navigated the track Successfully");
-    }
-    
+    } 
 }

@@ -48,7 +48,7 @@ public class TrainTrack {
         maxTrainA = new MageeSemaphore(3);
         maxTrainB = new MageeSemaphore(3); 
         
-        //creating global conuts of trains using shared track
+        //creating global couuts of trains using shared track
         aUsingCrossRoad = new AtomicInteger(0);
         bUsingCrossRoad = new AtomicInteger(0);
 
@@ -87,45 +87,18 @@ public class TrainTrack {
         if (aUsingCrossRoad.incrementAndGet() == 1){        // if first A train is approaching crossroad    
             sharedCrossRoadLock.P();                        // grab lock to crossroad
         }
-        aMutexSem.V();                                      //release mutually exclusive access to global variable aUsingCrossRoad                                                       
-        slotSem[4].P();                                     //wait for next slot to be free
-        slots[4] = slots[3];                                //move train to next slot
-        slots[3] = "[..]";                                  //last slot is now empty
-        slotSem[3].V();                                     //free semaphore for last slot
-        trainActivity.addMovedTo(4);                        //record activity
-        CDS.idle((int) (Math.random() * 10));
-                                                       
-        slotSem[5].P();
-        slots[5] = slots[4];
-        slots[4] = "[..]";
-        slotSem[4].V();                                 
-        trainActivity.addMovedTo(5);                    
+        aMutexSem.V(); 
         
-        slotSem[6].P();
-        slots[6] = slots[5];
-        slots[5] = "[..]";
-        slotSem[5].V();                                 
-        trainActivity.addMovedTo(6);                    
-        CDS.idle((int) (Math.random() * 10));
-                                                       
-        slotSem[7].P();
-        slots[7] = slots[6];
-        slots[6] = "[..]";
-        slotSem[6].V();                                 
-        trainActivity.addMovedTo(6);                    
-        
-        slotSem[8].P();
-        slots[8] = slots[7];
-        slots[7] = "[..]";
-        slotSem[7].V();                                 
-        trainActivity.addMovedTo(8);                    
-        
-        slotSem[9].P();
-        slots[9] = slots[8];
-        slots[8] = "[..]";
-        slotSem[8].V();                                 
-        trainActivity.addMovedTo(9);                    
-                                                        
+        int currentPos = 3;     
+        do {                                                        
+            slotSem[currentPos + 1].P();                // wait for the slot ahead to be free
+            slots[currentPos + 1] = slots[currentPos];  // move train forward
+            slots[currentPos] = "[..]";                 //clear the slot the train vacated
+            trainActivity.addMovedTo(currentPos + 1);   //record the train activity
+            slotSem[currentPos].V();                    //signal slot you are leaving 
+            currentPos++;
+        } while (currentPos  < 9);
+                                                               
         aMutexSem.P();                                  // obtain mutually exclusive access to global variable aUsingCrossRoad
         if (aUsingCrossRoad.decrementAndGet() == 0){    // if last A train leaving shared track
             sharedCrossRoadLock.V();                    // release lock to shared track
@@ -138,7 +111,7 @@ public class TrainTrack {
         int currentPos = 9;
         do {
             slotSem[currentPos + 1].P();                //wait for the slot ahead to be free
-            slots[currentPos + 1] = slots[currentPos];  //trsin moves to next slot
+            slots[currentPos + 1] = slots[currentPos];  //train moves to next slot
             slots[currentPos] = "[..]";                 //previous slot is now empty
             trainActivity.addMovedTo(currentPos + 1);   //record the activity
             slotSem[currentPos].V();                    //release previous slot semaphore 
