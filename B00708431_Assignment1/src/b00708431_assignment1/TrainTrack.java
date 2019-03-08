@@ -14,7 +14,7 @@ public class TrainTrack {
     //Array to hold Binary semaphores for each track section
     private final MageeSemaphore slotSem[] = new MageeSemaphore[22];
     
-     //Reference to Train activities
+    //Reference to Train activities
     Activity trainActivity;
 
     //Maximum Trains allowed on track at any one time
@@ -107,6 +107,7 @@ public class TrainTrack {
     }
        
      public void MoveTrainA_OffTrack(String trainName) {
+         
         CDS.idle((int) (Math.random() * 10));
         int currentPos = 9;
         do {
@@ -207,6 +208,7 @@ public class TrainTrack {
     }
     
     public void MoveTrainB_OffTrack(String trainName) {
+        
         CDS.idle((int) (Math.random() * 100));       
         int currentPos = 19;
         do {

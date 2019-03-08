@@ -8,8 +8,8 @@ package b00708431_assignment1;
 public class Assignment1 {
     
     //maximum number of each train allowed on their respective track
-    static final int num_Of_A_Trains = 20;
-    static final int num_Of_B_Trains = 20;
+    static final int num_Of_A_Trains = 50;
+    static final int num_Of_B_Trains = 50;
     
     //Train Track class 
     static TrainTrack trainTrack;    
