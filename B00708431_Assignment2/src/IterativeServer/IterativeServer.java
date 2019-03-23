@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-public class Server {
+public class IterativeServer {
 
     public static void main(String[] args) {
       
@@ -20,11 +20,11 @@ public class Server {
         }        
         System.out.println("Number server started.");       
         //Creates the server socket that has been chosen
-        try(ServerSocket serverSocket = new ServerSocket(portNum)){      
+        try(ServerSocket serverSocket = new ServerSocket(portNum)){ 
+            
             while(true){
-              
-                Socket clientSocket = serverSocket.accept();
-                
+             
+                Socket clientSocket = serverSocket.accept();     
                 //When a client connects
                 try (BufferedReader is = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     PrintWriter os = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream())))
