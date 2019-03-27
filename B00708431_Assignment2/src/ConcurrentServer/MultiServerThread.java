@@ -13,7 +13,6 @@ public class MultiServerThread extends Thread {
     int generatedNumber = 0;
     boolean found;
     
-    
     MultiServerThread(Socket socket){
         super("MultServerThread");
         this.clientSocket = socket;
@@ -78,8 +77,7 @@ public class MultiServerThread extends Thread {
         catch(IOException e){    
             System.out.print("Failed to get I/O Streams" + e);
             System.exit(1);
-        }
-        
+        }      
         System.out.println("Client left");  
     }
     
