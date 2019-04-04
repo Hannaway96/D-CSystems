@@ -8,7 +8,7 @@ public class IterativeClient {
              
     public static void main(String[] args) {
                
-        String hostName = "Jack-PC";    //Default Host
+        String hostName = "LAPTOP-4OJO7OKH";    //Default Host
         int portNum = 7000;             //Default Port       
         int guessCounter = 0;
         boolean found = false;
@@ -32,8 +32,7 @@ public class IterativeClient {
                 BufferedReader is = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())))
             {
                 String fromServer;
-                int userGuess = 0, lowLimit = 0, highLimit = 0;                        
-                    //BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));                  
+                int userGuess = 0, lowLimit = 0, highLimit = 0;                                          
                     System.out.print("Welcome to the number guessing game!\n"
                            + "You will input two numbers, a lower limit and a higher limit.\n"
                            + "I'll think of a number between those two limits and you have to guess it.\n"
@@ -45,7 +44,8 @@ public class IterativeClient {
                     while(!userInput.hasNextInt()){
                         System.out.println("Not a valid number, Try again.");
                         userInput.next();
-                    }                        
+                    }
+                    
                     lowLimit = userInput.nextInt();
                     os.println(lowLimit);
                     os.flush();                                                                                                                  
@@ -54,11 +54,13 @@ public class IterativeClient {
                     //Validation to ensure higher boundary is higher than lower boundary
                     boolean valid = false;
                     while(!valid){
+                        //loop to ensure token entered is an integer only
                         while(!userInput.hasNextInt()){                       
                           System.out.println("Not a valid number, Try again."); 
                           userInput.next();
                         }
                        
+                        //check lower limit isn't greater than higher limit
                         highLimit = userInput.nextInt();                        
                         if(lowLimit >= highLimit){
                            System.out.println("Lower limit cannot be greater than or equal to higher limit");
@@ -81,7 +83,8 @@ public class IterativeClient {
                             System.out.println("\nYou guessed " + guessCounter + " times.");
                             found = true;
                         }
-                                
+                             
+                        //break out of the guessing loop if the number has been guessed corrently
                         if(found == true){                           
                             break;
                         }   
@@ -92,6 +95,7 @@ public class IterativeClient {
                             userInput.next();
                         }   
                         
+                        //take users guess and send it to the server
                         userGuess = userInput.nextInt();
                         os.println(userGuess);
                         os.flush();      

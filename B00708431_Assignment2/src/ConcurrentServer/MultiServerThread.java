@@ -57,9 +57,7 @@ public class MultiServerThread extends Thread {
                 }
                 else{
                     output = "You got it!";
-                    clientGuesses++;
-                    os.println(output);
-                    os.flush();  
+                    clientGuesses++;  
                             
                     System.out.println("FOUND "); 
                     System.out.println("Client guessed " + clientGuesses + " times");

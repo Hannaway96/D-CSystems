@@ -24,6 +24,7 @@ public class IterativeServer {
             
             while(true){
              
+                //connect the client
                 Socket clientSocket = serverSocket.accept();     
                 //When a client connects
                 try (BufferedReader is = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -44,26 +45,27 @@ public class IterativeServer {
                     System.out.println("Higher: " + HIGHER_BOUNDARY);
                     System.out.println("Selected: " + generatedNumber);
                    
+                    //inform user number has been generated and to start guessing
                     output = "Guess a number between " + LOWER_BOUNDARY + " and " + HIGHER_BOUNDARY;
                     os.println(output);
                     os.flush();
                     
+                    //continue looping while the user keeps sending guesses and found is false
                     while((input = is.readLine()) != null && found != true){  
                         
+                        //if the client's guess is greater than the target
                         if(Integer.parseInt(input) > generatedNumber){
                             output = "Lower";   
                             clientGuesses++;
-                        }
+                        }   //if it's lower than the target
                         else if(Integer.parseInt(input) < generatedNumber){
                             output = "Higher";
                             clientGuesses++;
-                        }
+                        }   //otherwise it is the target number
                         else{
                             output = "You got it!";
                             clientGuesses++;
-                            os.println(output);
-                            os.flush();  
-                            
+
                             System.out.println("FOUND "); 
                             System.out.println("Client guessed " + clientGuesses + " times");
                             found = true; 

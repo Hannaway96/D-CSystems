@@ -8,7 +8,7 @@ public class MultiClient {
              
     public static void main(String[] args) {
                
-        String hostName = "Jack-PC";    //Default Host
+        String hostName = "LAPTOP-4OJO7OKH";    //Default Host
         int portNum = 7000;             //Default Port       
         int guessCounter = 0;
         boolean found = false;
